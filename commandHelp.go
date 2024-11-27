@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func commandHelp() error {
+func commandHelp(c *Config) error {
 	fmt.Println("Usage: ")
 	fmt.Println("")
 	commands := commandDetail()
