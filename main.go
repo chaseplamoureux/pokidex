@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
+	"github.com/chaseplamoureux/pokidexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -14,12 +16,16 @@ type cliCommand struct {
 }
 
 type Config struct {
-	Next     string
-	Previous string
+	pokeapiClient	pokeapi.Client
+	Next     		*string
+	Previous 		*string
 }
 
 func main() {
-	config := Config{}
+	pokeClient := pokeapi.NewClient(5 * time.Second)
+	config := &Config{
+		pokeapiClient: pokeClient,
+	}
 	for {
 		fmt.Print("pokidex > ")
 		scanner := bufio.NewScanner(os.Stdin)
@@ -27,7 +33,7 @@ func main() {
 		inputCommand := strings.ToLower(scanner.Text())
 		output, exists := commandDetail()[inputCommand] // certain types can be read directly from the function call if its the return value
 		if exists {
-			err := output.callback(&config)
+			err := output.callback(config)
 			if err != nil {
 				fmt.Println(err)
 			}
