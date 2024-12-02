@@ -12,7 +12,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*Config) error
+	callback    func(*Config, []string) error
 }
 
 type Config struct {
@@ -22,7 +22,7 @@ type Config struct {
 }
 
 func main() {
-	pokeClient := pokeapi.NewClient(5 * time.Second)
+	pokeClient := pokeapi.NewClient(5*time.Second, time.Minute*5)
 	config := &Config{
 		pokeapiClient: pokeClient,
 	}
@@ -30,10 +30,11 @@ func main() {
 		fmt.Print("pokidex > ")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
-		inputCommand := strings.ToLower(scanner.Text())
-		output, exists := commandDetail()[inputCommand] // certain types can be read directly from the function call if its the return value
+		inputCommand := scanner.Text()
+		formattedInputCommand := formatInputCommand(inputCommand)
+		output, exists := commandDetail()[formattedInputCommand[0]] // certain types can be read directly from the function call if its the return value
 		if exists {
-			err := output.callback(config)
+			err := output.callback(config, formattedInputCommand)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -41,6 +42,10 @@ func main() {
 			fmt.Println("invalid command")
 		}
 	}
+}
+
+func formatInputCommand(inputCommand string) []string {
+	return strings.Fields(strings.ToLower(inputCommand))
 }
 
 func commandDetail() map[string]cliCommand {
@@ -65,6 +70,11 @@ func commandDetail() map[string]cliCommand {
 			name:        "mapb",
 			description: "displays previous locations on the pokidex map",
 			callback:    commandMapB,
+		},
+		"explore": {
+			name:        "explore",
+			description: "displays pokemon that exist in a certain location",
+			callback:    commandExplore,
 		},
 	}
 }

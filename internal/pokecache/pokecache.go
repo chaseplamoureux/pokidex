@@ -11,7 +11,7 @@ type cacheEntry struct {
 	createdTime time.Time
 }
 
-func newCache(interval time.Duration) Cache {
+func NewCache(interval time.Duration) Cache {
 	c := Cache{
 		cache: make(map[string]cacheEntry),
 	}

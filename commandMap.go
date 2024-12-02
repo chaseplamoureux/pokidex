@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func commandMap(c *Config) error {
+func commandMap(c *Config, inputCommand []string) error {
 	locationResp, err := c.pokeapiClient.ListLocations(c.Next)
 	if err != nil {
 		return err
@@ -19,7 +19,7 @@ func commandMap(c *Config) error {
 	return nil
 }
 
-func commandMapB(c *Config) error {
+func commandMapB(c *Config, inputCommand []string) error {
 	if c.Previous == nil {
 		return fmt.Errorf("ERROR: On first page. Cannot go further back")
 	}
