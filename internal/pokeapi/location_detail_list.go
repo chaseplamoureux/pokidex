@@ -41,5 +41,7 @@ func (c *Client) ListLocationDetails(id string) (locationDetails, error) {
 		return locationDetails{}, err
 	}
 
+	c.cache.Add(url, dat)
+
 	return locationDetailsResp, nil
 }
