@@ -19,12 +19,14 @@ type Config struct {
 	pokeapiClient	pokeapi.Client
 	Next     		*string
 	Previous 		*string
+	Pokedex			map[string]pokeapi.Pokemon
 }
 
 func main() {
 	pokeClient := pokeapi.NewClient(5*time.Second, time.Minute*5)
 	config := &Config{
 		pokeapiClient: pokeClient,
+		Pokedex: make(map[string]pokeapi.Pokemon),
 	}
 	for {
 		fmt.Print("pokidex > ")
@@ -75,6 +77,11 @@ func commandDetail() map[string]cliCommand {
 			name:        "explore",
 			description: "displays pokemon that exist in a certain location",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Catch a Pokemon!",
+			callback:    commandCatch,
 		},
 	}
 }
